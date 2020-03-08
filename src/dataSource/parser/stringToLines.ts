@@ -7,14 +7,16 @@ export const parseLine = (input: string, cursor: number): rr.Result<mm.Line, str
     // Get indent length
     let indentLength = 0;
     for (let i=0; i<input.length; i++) {
-        if (input[i] !== ' ') {
+        // Indents can be made out of spaces or tab characters.
+        // They are mostly spaces, but in some R packages, tabs are used
+        // (and is mixed with spaces, even in the same package).
+        if (input[i] !== ' ' && input[i] !== '\t') {
             indentLength = i;
             break;
         }
     }
     // ---
     // Do logic based on indent length
-    // All empty
     if (indentLength === input.length) { 
         return rr.ok({ type: 'empty' });
     }
@@ -30,8 +32,9 @@ export const parseLine = (input: string, cursor: number): rr.Result<mm.Line, str
             return rr.ok({ type: 'propLine1', name, value });
         }
         // Is indented, should be 2nd or later lines of a property
-        case 8: return rr.ok({ type: 'propLine>1', value: input.substring(8) });
-        default: return rr.err(`Error at line ${cursor+1}: Line is not indented by 8 spaces, only 8-spaces tabs/indents are allowed.: ${input}`)
+        // Any amount of indentation, even if it is "jagged", should pass.
+        // There are packages where the indentation is "jagged".
+        default: return rr.ok({ type: 'propLine>1', value: input.substring(indentLength) });
     }
 };
 
