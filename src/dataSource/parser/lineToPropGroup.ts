@@ -22,7 +22,7 @@ const parseProp = (input: readonly mm.Line[], cursor: number): rr.Result<mm.Pars
         switch (line.type) {
             case 'empty': 
             case 'propLine1': return rr.ok({ output: { name, value }, cursor: i });
-            case 'propLine>1': value += line.value;
+            case 'propLine>1': value += ' ' + line.value;
         }
     }
     // ---
@@ -53,14 +53,7 @@ const parseToPropGroup = (input: readonly mm.Line[], cursor: number): rr.Result<
         // Add value and advance cursor
         props.push(parsePropOutput.output);
         cursor = parsePropOutput.cursor;
-        // // Skip empty lines
-        // // Check for empty line, reject empty lines
-        // while (cursor < input.length && input[cursor].type === 'empty') {
-        //     cursor++;
-        //     // return rr.err(`[parseToPropGroup] Error while parsing to PropGroup at line ${cursor+1}: First line is an empty line, empty line is not allowed by the parsing logic.`)
-        // }
     }
-    // ---
     // Skip empty lines after
     while (cursor < input.length && input[cursor].type === 'empty') {
         cursor += 1;

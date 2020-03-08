@@ -1,9 +1,9 @@
 export interface Package {
     name: string;
     version: string;
-    datePublication: string;
-    title: string;
-    description: string;
+    datePublication: string | null;
+    title: string | null;
+    description: string | null;
 }
 
 export interface Author {
