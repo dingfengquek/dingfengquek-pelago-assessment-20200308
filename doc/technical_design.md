@@ -28,7 +28,9 @@ Alternatives that were considered and rejected are:
 # Tech Stack
 
 - Database: PostgreSQL with pg_trgm extension
+  - PostgreSQL at v12.2
 - Code and web server: Node.js, Yarn, and TypeScript
+  - Node.js at v12.6.1 (the LTS version at v12)
 - Containerization: Docker (partial; still need the OS)
 - OS: Runs on Mac OS X (Very likely to run on Debian and Ubuntu Linux too; Not sure about Windows)
 
@@ -52,3 +54,13 @@ A manual deployment process is used. It currently uses Docker for the database, 
 A relational database is used, although a document database would have worked as well. The choice of PostgreSQL is arbitrary among the mainstream relational databases (MariaDB/MySQL and MS SQL would have worked equally well).
 
 For the database schema, refer to the migration files in `src/db/...`.
+
+# Tests
+
+All tests are manually run, with visual inspection of the result. The test files are stored in `src/**/__adhocTest__/<testFilename>.ts`, where `<testFilename>` generally (but not necessarily) corresponds to the filename in its parent directory. (E.g. `src/dataSource/__adhocTest__/index.ts` corresponds to `src/dataSource/index.ts` and imports and calls the function from the latter.)
+
+The manual tests can be run with `npx ts-node src/...`.
+
+Although the tests could be specified in `tsconfig.json` to not be compiled during "production" deployment, they are not. This is intentional, for convenience, and because the project is small enough that compile speeds are negligible.
+
+There are no intentions to add automated tests as this is just a coding exercise, although if automation is desired, a good place to start would be to encode the manually run tests as automated tests.
