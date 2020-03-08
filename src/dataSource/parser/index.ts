@@ -4,11 +4,7 @@ import * as mmApp from '../../models';
 import { parseToLines } from './stringToLines';
 import { parseToPropGroups } from './lineToPropGroup';
 import { propGroupToPackageX } from './mapParserToApp';
-
-export interface ListDataElement {
-    name: string;
-    version: string;
-}
+import { ListDataElement } from '../models';
 
 export const parseListData = (input: string): rr.Result<readonly ListDataElement[], string> => {
     // Parse to lines
