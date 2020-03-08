@@ -75,26 +75,31 @@ export const searchByPackageNameQuery = async (client: DB, query: string): Promi
 
 BEGIN;
 
-CREATE TEMPORARY VIEW matched_package_names (package_name) AS
+CREATE TEMPORARY VIEW matched_package_names (package_name, similarity) AS
 
-    SELECT package_name
-        FROM cran.package
-        WHERE SIMILARITY(package_name, $1) > 0.2;
+    SELECT package_name, similarity
+        FROM (SELECT package_name, SIMILARITY(package_name, $1) as similarity FROM cran.package) as t
+        WHERE similarity > 0.2
+        ORDER BY similarity DESC;
 
-SELECT package_name, version, date_publication, title, description
-    FROM cran.package
-    WHERE package_name IN (SELECT * FROM matched_package_names)
-    ORDER BY package_name;
 
-SELECT package_name, name, email
-    FROM cran.author
-    WHERE package_name IN (SELECT * FROM matched_package_names)
-    ORDER BY package_name;
+SELECT t1.package_name, t2.version, t2.date_publication, t2.title, t2.description
+    FROM matched_package_names AS t1
+    LEFT OUTER JOIN cran.package AS t2
+        ON t2.package_name = t1.package_name
+    ORDER BY t1.similarity DESC, t1.package_name;
 
-SELECT package_name, name, email
-    FROM cran.maintainer
-    WHERE package_name IN (SELECT * FROM matched_package_names)
-    ORDER BY package_name;
+SELECT t2.package_name, t2.name, t2.email
+    FROM matched_package_names AS t1
+    LEFT OUTER JOIN cran.author AS t2
+        ON t2.package_name = t1.package_name
+    ORDER BY t1.similarity DESC, t1.package_name;
+
+SELECT t2.package_name, t2.name, t2.email
+    FROM matched_package_names AS t1
+    LEFT OUTER JOIN cran.maintainer AS t2
+        ON t2.package_name = t1.package_name
+    ORDER BY t1.similarity DESC, t1.package_name;
 
 DROP VIEW matched_package_names;
 
