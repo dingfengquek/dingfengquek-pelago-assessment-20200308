@@ -1,0 +1,12 @@
+{
+  "name": "dingfengquek-pelago-codingassessment-20200208",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "author": "Dingfeng Quek",
+  "license": "This is a proprietary repository. No license is granted.",
+  "private": true,
+  "dependencies": {
+    "ts-node": "8.6.2",
+    "typescript": "3.8.3"
+  }
+}
