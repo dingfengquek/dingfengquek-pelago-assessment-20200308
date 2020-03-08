@@ -19,6 +19,16 @@ Description: This is my description
 Date/Publication: 2012-08-14 16:27:09
 Author: Alice, Bob  <bob@gmail.com>
 Maintainer: Charlie<charlie@gmail.com>
+
+Package: MyApp2
+Version: 1.0.0
+Title: MyTitle2
+Description: This is my description 2
+        for MyApp. It is long and spans two lines.
+Date/Publication: 2012-08-14 16:27:09
+Author: John, Jonathan <jona@gmail.com>
+Maintainer: Jamie<jam@gmail.com>
+
 `));
 
 
