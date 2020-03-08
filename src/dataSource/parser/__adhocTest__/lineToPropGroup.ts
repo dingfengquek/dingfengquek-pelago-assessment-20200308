@@ -55,3 +55,13 @@ print(p.parseToPropGroups([
     },
     { type: 'propLine>1', value: 'for dependencies' },
 ]));
+
+
+printH1('This should work - Multiple prop groups');
+print(p.parseToPropGroups([
+    { type: 'propLine1', name: 'Package', value: 'MyApp' },
+    { type: 'propLine1', name: 'Version', value: '1.0.0' },
+    { type: 'empty' },
+    { type: 'propLine1', name: 'Package', value: 'MyApp2' },
+    { type: 'propLine1', name: 'Version', value: '2.0.0' },
+]));

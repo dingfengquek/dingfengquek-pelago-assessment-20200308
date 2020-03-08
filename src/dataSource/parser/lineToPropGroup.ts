@@ -30,26 +30,35 @@ const parseProp = (input: readonly mm.Line[], cursor: number): rr.Result<mm.Pars
 };
 
 const parseToPropGroup = (input: readonly mm.Line[], cursor: number): rr.Result<mm.ParseOutput<mm.PropGroup>, string> => {
+    // Error if first line is empty. If the error is not returned here, it will skip empty lines for an empty PropGroup later.
+    if (input[cursor].type === 'empty') {
+        return rr.err(`[parseToPropGroup] Error: First line sould not be empty.`);
+    }
     const props: mm.Prop[] = [];
     while (cursor < input.length) {
+        // Break if the current line is empty
+        if (input[cursor].type === 'empty') {
+            break;
+        }
         // Parse prop
         const parsePropResult = parseProp(input, cursor);
         if (!parsePropResult.isOk) {
             return rr.err(`[parseToPropGroup] Error while parsing to PropGroup at line ${cursor+1}: Error while parsing prop: ${parsePropResult.err}.`);
         }
         const parsePropOutput = parsePropResult.ok;
+        // Check for stuck cursor
         if (parsePropOutput.cursor === cursor) {
-            return rr.err(`[parseToPropGroup] Error while parsing to package at line ${cursor+1}: parseToPackage parser could not advance cursor, this is most likely a bug in the parser.`);
+            return rr.err(`[parseToPropGroup] Error while parsing to PropGroup at line ${cursor+1}: parseToPackage parser could not advance cursor, this is most likely a bug in the parser.`);
         }
         // Add value and advance cursor
         props.push(parsePropOutput.output);
         cursor = parsePropOutput.cursor;
-        // Skip empty lines
-        // Check for empty line, reject empty lines
-        while (cursor < input.length && input[cursor].type === 'empty') {
-            cursor++;
-            // return rr.err(`[parseToPropGroup] Error while parsing to PropGroup at line ${cursor+1}: First line is an empty line, empty line is not allowed by the parsing logic.`)
-        }
+        // // Skip empty lines
+        // // Check for empty line, reject empty lines
+        // while (cursor < input.length && input[cursor].type === 'empty') {
+        //     cursor++;
+        //     // return rr.err(`[parseToPropGroup] Error while parsing to PropGroup at line ${cursor+1}: First line is an empty line, empty line is not allowed by the parsing logic.`)
+        // }
     }
     // ---
     // Skip empty lines after
