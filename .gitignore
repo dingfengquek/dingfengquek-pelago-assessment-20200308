@@ -1,5 +1,6 @@
-# Node.js and NPM
+# Node.js, NPM, and Yarn
 node_modules/
+yarn-error.log
 
 # Build
 dist/
