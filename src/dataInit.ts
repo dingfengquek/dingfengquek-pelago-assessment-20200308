@@ -15,16 +15,19 @@ const pgp = pgPromise();
 
 // ---
 
-const PACKAGE_COUNT_LIMIT = process.env['PACKAGE_COUNT_LIMIT'] ?
-    parseInt(process.env['PACKAGE_COUNT_LIMIT']) :
-    50;
-
+const DB_HOST = process.env.DB_HOST || 'localhost';
+const DB_PORT = parseInt(process.env.DB_PORT || '13000');
+const PACKAGE_COUNT_LIMIT = parseInt(process.env.PACKAGE_COUNT_LIMIT || '50');
 
 (async () => {
 
+    console.log(`DB_HOST=${DB_HOST}`);
+    console.log(`DB_PORT=${DB_PORT}`);
+    console.log(`PACKAGE_COUNT_LIMIT=${PACKAGE_COUNT_LIMIT}`);
+
     const db: pgPromise.IDatabase<{}, pg.IClient> = pgp({
-        host: 'localhost',
-        port: 13000,
+        host: DB_HOST,
+        port: DB_PORT,
         user: 'postgres',
         password: 'password',
         database: 'postgres',
@@ -40,7 +43,7 @@ const PACKAGE_COUNT_LIMIT = process.env['PACKAGE_COUNT_LIMIT'] ?
         if (!listDataResult.isOk) {
             throw new Error(`Error when getting list data result: ${listDataResult.err}`);
         }
-        const listData = listDataResult.ok.slice(0, PACKAGE_COUNT_LIMIT); // @todo: Factor out limit of 50
+        const listData = listDataResult.ok.slice(0, PACKAGE_COUNT_LIMIT);
         // ---
         console.log(`Querying each package individually from CRAN's API for its DESCRIPTION file...`);
         for (const x of listData) {

@@ -55,6 +55,8 @@ A relational database is used, although a document database would have worked as
 
 For the database schema, refer to the migration files in `src/db/...`.
 
+Lastly, note that in the docker deployment, the database does not persist data once it is shut off. This is intentional (the `--rm` option is used).
+
 # Tests
 
 All tests are manually run, with visual inspection of the result. The test files are stored in `src/**/__adhocTest__/<testFilename>.ts`, where `<testFilename>` generally (but not necessarily) corresponds to the filename in its parent directory. (E.g. `src/dataSource/__adhocTest__/index.ts` corresponds to `src/dataSource/index.ts` and imports and calls the function from the latter.)
