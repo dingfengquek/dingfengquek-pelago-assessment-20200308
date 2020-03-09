@@ -6,20 +6,24 @@
 
 import pgPromise from 'pg-promise';
 import * as pg from 'pg-promise/typescript/pg-subset';
-
-const pgp = pgPromise();
-
 import { migration001 } from './db/migrations/migration001';
 
 // ---
+
+const pgp = pgPromise();
+
 // ---
 
+const DB_HOST = process.env.DB_HOST || 'localhost';
+const DB_PORT = parseInt(process.env.DB_PORT || '13000');
 
 (async () => {
 
+    console.log(`DB_HOST=${DB_HOST}`);
+    console.log(`DB_PORT=${DB_PORT}`);
     const db: pgPromise.IDatabase<{}, pg.IClient> = pgp({
-        host: 'localhost',
-        port: 13000,
+        host: DB_HOST,
+        port: DB_PORT,
         user: 'postgres',
         password: 'password',
         database: 'postgres',

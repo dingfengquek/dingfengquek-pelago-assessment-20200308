@@ -6,21 +6,27 @@
 
 import pgPromise from 'pg-promise';
 import * as pg from 'pg-promise/typescript/pg-subset';
-
 import express from 'express';
-
-const pgp = pgPromise();
-
 import * as dbAPI from './db/index';
 
 // ---
 
+const pgp = pgPromise();
+
+// ---
+
+const DB_HOST = process.env.DB_HOST || 'localhost';
+const DB_PORT = parseInt(process.env.DB_PORT || '13000');
+const SERVER_HOST = process.env.SERVER_HOST || 'localhost';
 
 (async () => {
 
+    console.log(`DB_HOST=${DB_HOST}`);
+    console.log(`DB_PORT=${DB_PORT}`);
+    console.log(`SERVER_HOST=${SERVER_HOST}`);
     const db: pgPromise.IDatabase<{}, pg.IClient> = pgp({
-        host: 'localhost',
-        port: 13000,
+        host: DB_HOST,
+        port: DB_PORT,
         user: 'postgres',
         password: 'password',
         database: 'postgres',
@@ -40,10 +46,9 @@ import * as dbAPI from './db/index';
     });
     
     {
-        const host = 'localhost';
         const port = 4000;
-        app.listen(port, host, () => {
-            console.log(`Server started at ${host}:${port}`);
+        app.listen(port, SERVER_HOST, () => {
+            console.log(`Server started at ${SERVER_HOST}:${port}`);
         });
     }
 

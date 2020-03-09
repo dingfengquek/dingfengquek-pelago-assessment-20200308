@@ -1,10 +1,15 @@
 {
   "name": "dingfengquek-pelago-codingassessment-20200208",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "dist/server.js",
   "author": "Dingfeng Quek",
   "license": "This is a proprietary repository. No license is granted.",
   "private": true,
+  "scripts": {
+    "serve": "npx ts-node src/server",
+    "db-init": "npx ts-node src/dbInit",
+    "data-init": "npx ts-node src/dataInit"
+  },
   "dependencies": {
     "@types/express": "4.17.3",
     "@types/tar": "4.0.3",

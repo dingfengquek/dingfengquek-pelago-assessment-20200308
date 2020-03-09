@@ -4,20 +4,31 @@ This document contains the instructions. For other documentation, refer to the o
 
 # Instructions
 
-This is on a NPM/Yarn/TypeScript tech stack. Clone and run yarn 
+This is on a NPM/Yarn/TypeScript tech stack. Clone and run yarn .
 
 The app can be run in 4 separate steps:
+
+0. Clone the repo, run `yarn install`. Install Docker if required. Install NPM and Yarn if required.
 
 1. Start the PostgreSQL service
 2. Initialize the DB (database) schema.
 3. Download data from CRAN (this might take 5 to 15 minutes) and upload it into the DB.
 4. Start the web-server.
 
+Then access it via http://localhost:4000/search?q=abc
+
+- PostgreSQL start (also initializes the DB schema): `./run.sh db-up`
+- PostgreSQL down: `./run.sh db-down`
+- Download data: `./run.sh data-init-10` (use ctrl+C to interrupt) or `./run.sh data-init-50`
+- Start server: `./run.sh serve` (use ctrl+C to stop)
+
+To cleanup (also clears the database, the database Docker volume is not persisted)
+
+- Cleanup: `./run.sh cleanup` - This removes all containers and project-specific docker images from local.
+
+
 ## Instructions - Start the PostgreSQL Service
 
-To start the PostgreSQL service, run
-
-    docker run --network network1 -p 13000:5432 --name plpg -e POSTGRES_PASSWORD=password -d postgres:12.2
 
 This requires Docker. Note that:
 
@@ -58,6 +69,4 @@ To start the server, run
 which will start the server at localhost:4000.
 
 The server can be queried at http://localhost:4000/search?q=Bayesian .
-
-# Discu
 
