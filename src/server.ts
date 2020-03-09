@@ -8,6 +8,9 @@ import pgPromise from 'pg-promise';
 import * as pg from 'pg-promise/typescript/pg-subset';
 import express from 'express';
 import * as dbAPI from './db/index';
+import * as mm from './models';
+
+import { ArrayValueHashMap } from './dataStructures';
 
 // ---
 
@@ -42,7 +45,26 @@ const SERVER_HOST = process.env.SERVER_HOST || 'localhost';
         }
         // Assumes that there will be no errors, errosr are not handled.
         const dbResult = await dbAPI.searchByPackageNameQuery(db, query);
-        res.send(dbResult);
+
+        // Do a pre-sorted merge-join to reassemble PackageX from Package, Author, and Maintainer
+        const authorHashMapByPackageName = new ArrayValueHashMap<string, mm.Author>();
+        const maintainerHashMapByPackageName = new ArrayValueHashMap<string, mm.Author>();
+        for (const author of dbResult.authors) {
+            authorHashMapByPackageName.addOne(author.packageName, author);
+        }
+        for (const maintainer of dbResult.maintainers) {
+            maintainerHashMapByPackageName.addOne(maintainer.packageName, maintainer);
+        }
+        const packageXs: mm.PackageX[] = [];
+        for (const package_ of dbResult.packages) {
+            packageXs.push({
+                package: package_,
+                authors: authorHashMapByPackageName.get(package_.name),
+                maintainers: maintainerHashMapByPackageName.get(package_.name),
+            });
+        }
+
+        res.send(packageXs);
     });
     
     {
